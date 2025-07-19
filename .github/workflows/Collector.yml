@@ -1,0 +1,30 @@
+name: V2Ray Collector Engine
+
+on:
+  schedule:
+    - cron: '0 */5 * * *'  # هر ۵ ساعت
+  workflow_dispatch:       # اجرای دستی هم فعال است
+
+jobs:
+  run-engine:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Collector Engine
+        run: python Engine.py
+
+      - name: Commit & Push updated configs
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "♻️ Auto-update configs via Engine.py"
